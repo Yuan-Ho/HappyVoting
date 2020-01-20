@@ -1,0 +1,487 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+@section PagePluginStyles
+{
+	<!-- BEGIN PAGE LEVEL PLUGINS -->
+	@Styles.Render("~/assets/global/plugins/icheck/skins/minimal/vote")
+	<!-- END PAGE LEVEL PLUGINS -->
+}
+@section PageStyles
+{
+	<!-- BEGIN PAGE LEVEL STYLES -->
+	<link href="../assets/apps/css/todo-2.min.css" rel="stylesheet" type="text/css" />
+	<!-- END PAGE LEVEL STYLES -->
+}
+<!-- BEGIN PAGE BAR -->
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<a href="/">Home</a>
+			<i class="fa fa-circle"></i>
+		</li>
+		<li>
+			<span>投票</span>
+		</li>
+	</ul>
+	<div class="page-toolbar">
+	</div>
+</div>
+<!-- END PAGE BAR -->
+<!-- BEGIN PAGE TITLE-->
+<h3 class="page-title" data-bind="text: headingsTitle">@ViewBag.Title
+	<small></small>
+</h3>
+<!-- END PAGE TITLE-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN CONTENT HEADER -->
+<div class="row margin-bottom-40 vote-header">
+	<div class="col-md-12">
+		<h1>
+			<span id="headings-title"></span>
+		</h1>
+		<h2>
+			<span id="headings-desc"></span>
+		</h2>
+		<button type="button" class="btn btn-danger"
+			data-bind="click: submitHeadingActions, enable: gl.pageModel.pendingActions().length > 0">
+			寫好了
+		</button>
+	</div>
+</div>
+<!-- END CONTENT HEADER -->
+<div class="row" id="insert_sbjt_here">
+	<div class="col-md-3">
+		<label style="padding: 5px;" class="pulsate_on_show">
+			<button type="button" class="btn purple btn-outline" onclick="return onAddSubject()">
+				<i class="fa fa-pencil-square-o"></i>
+				增加新題目
+			</button>
+		</label>
+	</div>
+</div>
+<div class="row margin-top-20">
+	<div class="col-md-12">
+		<div class="portlet box blue-hoki">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-settings"></i>
+					設定
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form class="form-horizontal form-bordered">
+					<div class="form-body">
+						<div class="form-group">
+							<label class="control-label col-md-3">公開投票</label>
+							<div class="col-md-9">
+								<input id="chkSettingPublic" type="checkbox" class="make-switch" checked data-handle-width="80" data-on-text="<i class='fa fa-globe'></i> 公開" data-off-text="不公開" data-on-color="success" data-off-color="danger">
+								<span class="help-inline">公開的投票會被列在首頁的最新投票列表，很明顯。不公開的投票不會顯示在任何公開的列表，是隱藏的，您必須主動告知別人投票網址（否則不會有人進來。）</span>
+							</div>
+						</div>
+					</div>
+					<div class="form-actions">
+						<div class="row">
+							<div class="col-md-offset-3 col-md-9">
+								<button type="button" class="btn blue-madison"
+									data-bind="click: function () { submitActions(gl.pageModel.pendingActions) }, enable: gl.pageModel.pendingActions().length > 0">
+									寫好了
+								</button>
+								<button type="button" class="btn grey-salsa btn-outline" data-bind="click: onCancelSetting, enable: gl.pageModel.pendingActions().length > 0">取消</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="mt-element-step">
+	<div class="row step-line margin-top-20">
+		<div class="mt-step-desc">
+			<div class="font-dark bold uppercase">進度</div>
+		</div>
+		<div class="col-md-4 mt-step-col first" data-bind="css: { 'done': voteState() > 0, 'error': voteState() == 0 }">
+			<div class="mt-step-number bg-white font-grey">
+				<i class="fa fa-magic"></i>
+			</div>
+			<div class="mt-step-title uppercase font-grey">設計問卷</div>
+			<div class="mt-step-content font-grey">完畢後，請按下"發佈"</div>
+		</div>
+		<div class="col-md-4 mt-step-col" data-bind="css: { 'done': voteState() > 1, 'error': voteState() == 1 }">
+			<div class="mt-step-number bg-white font-grey">
+				<i class="fa fa-rocket"></i>
+			</div>
+			<div class="mt-step-title uppercase font-grey">投票進行中</div>
+			<div class="mt-step-content font-grey">Happy voting !</div>
+		</div>
+		<div class="col-md-4 mt-step-col last" data-bind="css: { 'done': voteState() > 2, 'error': voteState() == 2 }">
+			<div class="mt-step-number bg-white font-grey">
+				<i class="fa fa-comments"></i>
+			</div>
+			<div class="mt-step-title uppercase font-grey">投票已結束</div>
+			<div class="mt-step-content font-grey">不能再投票了，但可以查看結果</div>
+		</div>
+	</div>
+</div>
+<div class="clearfix margin-bottom-30">
+	<button class="btn yellow-casablanca btn-block" data-bind="click: onNextState, enable: isOwner, visible: voteState() < STATE_BUTTON_TEXTS.length">
+		<i class="fa fa-send-o"></i>
+		<span data-bind="text: STATE_BUTTON_TEXTS[voteState()]">下一步</span>...
+	</button>
+</div>
+<div class="row">
+	<div class="col-md-6 col-sm-6">
+		<div class="portlet light bordered">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-share font-hide"></i>
+					<span class="caption-subject font-hide bold uppercase">其它最新投票</span>
+				</div>
+				<div class="actions">
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen"></a>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<div class="scroller" style="height: 300px;" data-always-visible="1" data-rail-visible="0">
+					<ul class="feeds" data-bind="foreach: tagScrollAll">
+						<li>
+							<a data-bind="attr: { href: link, title: who }">
+								<div class="col1">
+									<div class="cont">
+										<div class="cont-col1">
+											<div class="label label-sm" data-bind="css: icon_clr()">
+												<i class="fa" data-bind="css: icon_cls()"></i>
+											</div>
+										</div>
+										<div class="cont-col2">
+											<div class="desc" data-bind="text: title"></div>
+										</div>
+									</div>
+								</div>
+								<div class="col2">
+									<div class="date" data-bind="text: time2()"></div>
+								</div>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="scroller-footer">
+					<div class="btn-arrow-link pull-right">
+						<a href="javascript:;">See All Records</a>
+						<i class="icon-arrow-right"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6 col-sm-6">
+		<div class="portlet green-sharp box">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="icon-bubble"></i>我想
+				</div>
+				<div class="tools">
+					<a href="javascript:;" class="collapse"></a>
+					<a href="javascript:;" class="remove"></a>
+				</div>
+			</div>
+			<div class="portlet-body">
+				<p>
+					<a class="btn red" onclick="createVote(true)">建立新投票
+						<span class="badge badge-default">Free !</span>
+					</a>
+				</p>
+				<p>
+					<a class="btn green" onclick="createVote(false)">建立不公開投票
+						<span class="badge badge-default">Free !</span>
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ko stopBinding: true -->
+<div id="sbjt_t" class="row hidden sbjt_c">
+	<div class="col-md-6">
+		<div class="portlet light bordered" data-bind="css: { 'border-red-sunglo': editing }">
+			<div class="portlet-title">
+				<div class="caption">
+					<i class="fa fa-sticky-note-o font-purple-plum"></i>
+					<span class="caption-subject font-purple-plum bold uppercase">第 <b data-bind='text: subjectOrdinal'>1</b> 題</span>
+				</div>
+				<div class="actions">
+					<a class="btn green btn-outline btn-circle btn-sm" data-bind="click: onStartEdit">
+						<i class="fa fa-pencil"></i>編輯 </a>
+					<div class="btn-group">
+						<button class="btn btn-default btn-circle btn-sm dropdown-toggle" data-toggle="dropdown"
+							onclick="return onQuestionToolMenu(this)" data-bind="disable: !editing() || !isWho || questionText().length == 0">
+							工具 <i class="fa fa-angle-down"></i>
+						</button>
+					</div>
+					<a class="btn btn-circle btn-icon-only btn-default fullscreen"></a>
+				</div>
+			</div>
+			<div class="portlet-body form">
+				<form role="form">
+					<div class="form-body">
+						<div class="form-group form-md-line-input form-md-floating-label" data-bind="css: { 'has-error': questionText().length == 0 }">
+							<div class="row margin-top-10">
+								<div class="col-sm-6 col-sm-offset-3 atta_cont">
+								</div>
+							</div>
+							<textarea class="form-control" rows="2" maxlength="1000"
+								data-bind="attr: { readOnly: !editing() || !isWho }, textInput: questionText"> </textarea>
+							<label>請點此輸入題目：</label>
+						</div>
+						<div class="form-group icheck-list">
+							<label id="ansr_t" class="ansr_c">
+								<div>
+									<input type="radio" name="anss_t" class="icheck" data-radio="iradio_minimal-red">
+								</div>
+								<div class="form-group form-md-line-input full-width" data-bind="css: { 'has-error': answerText().length == 0 }">
+									<div class="input-group full-width">
+										<span class="input-group-btn btn-left">
+											<button class="btn blue-madison" type="button">選項<span data-bind="text: qaId">0.0</span></button>
+										</span>
+										<div class="input-group-control">
+											<textarea class="form-control" rows="1" maxlength="1000"
+												data-bind="attr: { placeholder: ph, readOnly: !editing() || !isWho }, textInput: answerText"></textarea>
+											<!--textarea如果有placeholder的話，在clone()的時候IE會把placeholder的值放進內容裡。-->
+											<div class="form-control-focus"></div>
+										</div>
+										<span class="input-group-btn btn-right">
+											<button class="btn btn-outline dropdown-toggle green-meadow" data-toggle="dropdown"
+												onclick="return onAnswerToolMenu(this)" aria-expanded="false">
+												工具
+												<i class="fa fa-angle-down"></i>
+											</button>
+										</span>
+									</div>
+									<div class="row margin-top-10">
+										<div class="col-sm-6 col-sm-offset-3 atta_cont">
+											<!--<a class="thumbnail" target="_blank" href="http://i.imgur.com/kO1HavA.jpg">
+												<img src="http://i.imgur.com/kO1HavA.jpg">
+											</a>-->
+										</div>
+									</div>
+									<div class="row margin-top-10">
+										<div class="col-md-12">
+											<ul class="media-list comment_cont" data-bind="foreach: commentArray">
+												<li class="media">
+													<a class="pull-left" data-bind="attr: { title: who }">
+														<img width="27px" height="27px" data-bind="attr: {src: icon_src() }">
+													</a>
+													<div class="media-body todo-comment">
+														<p class="todo-text-color" data-bind="text: text"></p>
+													</div>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</label>
+						</div>
+					</div>
+					<div class="form-actions">
+						<div class="btn-set pull-left">
+							<label style="padding: 5px;" class="pulsate_on_show">
+								<button type="button" class="btn blue-hoki btn-outline" data-bind="click: onAddAnswer">
+									<i class="fa fa-plus"></i>
+									增加新選項
+								</button>
+							</label>
+						</div>
+						<div class="btn-set pull-right">
+							<button type="button" class="btn green"
+								data-bind="click: function () { submitActions(actions) }, enable: actions().length > 0, visible: editing">
+								<i class="fa fa-send-o"></i>
+								寫好了
+							</button>
+							<button type="button" class="btn default" data-bind="click: onCancelEdit, visible: editing">
+								<i class="fa fa-times"></i>
+								取消
+							</button>
+							<button type="button" class="btn green" data-bind="click: onSubmitTally, enable: pendingTally, visible: !editing()">
+								<i class="fa fa-send-o"></i>
+								送出
+							</button>
+							<button type="button" class="btn default" data-bind="click: onCancelTally, enable: pendingTally, visible: !editing()">
+								<i class="fa fa-times"></i>
+								取消
+							</button>
+							<button type="button" class="btn blue" data-bind="click: onResetTally, enable: voteState() == 1, visible: (votedTally() && !editing())">
+								<i class="fa fa-undo"></i>
+								重設投票...
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="portlet light bordered">
+			<div class="portlet-title tabbable-line">
+				<div class="caption">
+					<i class="icon-bar-chart font-yellow-lemon"></i>
+					<span class="caption-subject bold font-yellow-lemon uppercase">統計 <b data-bind='text: subjectOrdinal'>1</b></span>
+				</div>
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#piec_tab_t" data-toggle="tab">圓餅圖</a>
+					</li>
+					<li>
+						<a href="#linc_tab_t" data-toggle="tab">直條圖</a>
+					</li>
+				</ul>
+			</div>
+			<div class="portlet-body">
+				<h4 class="qstn_text" data-bind="text: questionText"></h4>
+				<div class="tab-content">
+					<div class="tab-pane active" id="piec_tab_t">
+						<div class="chart" style="height: 400px;"></div>
+					</div>
+					<div class="tab-pane" id="linc_tab_t">
+						<div class="chart" style="height: 400px;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /ko -->
+<div id="hidden_container">
+	<ul id="ecb_home" class="hidden">
+		<li id="enter_comment_box" class="media">
+			<a class="pull-left" href="javascript:;">
+				<img width="27px" height="27px">
+			</a>
+			<div class="media-body input-group">
+				<div class="input-group-control">
+					<textarea class="form-control" rows="1" maxlength="1000" placeholder="請點此輸入留言..."></textarea>
+					<div class="form-control-focus"></div>
+				</div>
+				<span class="input-group-btn btn-right">
+					<button type="button" class="btn btn-sm btn-circle btn-outline yellow-soft" onclick="onCommentDone()"><i class="fa fa-comment-o"></i></button>
+				</span>
+			</div>
+		</li>
+	</ul>
+	<ul id="qstn_tool_menu" class="dropdown-menu pull-right">
+		<li>
+			<a href="javascript:;">
+				<i class="fa fa-times"></i>刪除 </a>
+		</li>
+		<li class="divider"></li>
+		<li>
+			<a data-toggle="modal" data-target="#pictureDlg">
+				<i class="fa fa-picture-o"></i>插入圖片 </a>
+		</li>
+		<li>
+			<a href="javascript:;">
+				<i class="fa fa-youtube-play"></i>插入影片 </a>
+		</li>
+	</ul>
+	<ul id="ansr_tool_menu" class="dropdown-menu pull-right" role="menu">
+		<li>
+			<a onclick="onOpenComment()">
+				<i class="fa fa-commenting-o"></i>
+				留言
+			</a>
+		</li>
+		<li class="divider"></li>
+		<li class="disabled">
+			<a href="javascript:;">
+				<i class="fa fa-times"></i>
+				刪除
+			</a>
+		</li>
+		<li class="divider"></li>
+		<li class="add_pict_li">
+			<a onclick="onAddPicture(this)">
+				<i class="fa fa-picture-o"></i>
+				插入圖片
+			</a>
+		</li>
+		<li class="disabled">
+			<a href="javascript:;">
+				<i class="fa fa-youtube-play"></i>
+				插入影片
+			</a>
+		</li>
+	</ul>
+	<div id="pictureDlg" class="modal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Choose image</h4>
+				</div>
+				<div class="modal-body">
+					<p id="pict_info" class="text-center">Width: <mark></mark>, height: <mark></mark>, file size: <strong></strong>.</p>
+					<p id="pict_error" class="bg-warning text-center"></p>
+					<div>
+						<ul class="nav nav-tabs" role="tablist">
+							<li role="presentation" class="active"><a href="#tab_url_file" aria-controls="tab_url_file" role="tab" data-toggle="tab">URL / File</a></li>
+							<li role="presentation"><a href="#tab_my_recent" aria-controls="tab_my_recent" role="tab" data-toggle="tab">My recent</a></li>
+							<li role="presentation"><a href="#tab_others" aria-controls="tab_others" role="tab" data-toggle="tab">Other's</a></li>
+						</ul>
+						<div class="tab-content">
+							<div role="tabpanel" class="tab-pane active" id="tab_url_file">
+								<form class="form-horizontal">
+									<div class="form-group">
+										<label for="pict_url_ipt" class="col-sm-2 control-label">From URL</label>
+										<div class="col-sm-9 input-group">
+											<input type="text" class="form-control" id="pict_url_ipt" maxlength="100" placeholder="Image URL..." />
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="button" onclick="onPictUrl()">Check</button>
+											</span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="pict_file_chooser" class="col-sm-2 control-label">From file</label>
+										<div class="col-sm-9">
+											<input type='file' id='pict_file_chooser' accept='image/*' onchange="onPictChosen(this.files); /*this.value = null;*/" />
+										</div>
+									</div>
+								</form>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab_my_recent">
+								<table class="table table-hover" id="my_recent_pict_tbl">
+								</table>
+							</div>
+							<div role="tabpanel" class="tab-pane" id="tab_others">
+								<table class="table table-hover" id="others_pict_tbl">
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="pict_ok_btn" onclick="onPictureClick()" disabled="disabled">Ok</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<article id="preload_paper" class="hidden">
+	@{Html.RenderAction("PreloadPaper");}
+	<time>@DateTime.Now</time>
+</article>
+<script>
+	var preloadTotals = @{Html.RenderAction("PreloadTotals");};
+</script>
+@section CustomThemePanel
+{
+	<div class="theme-option">
+		<label>
+			<input type="checkbox" id="ctp_auto_refresh" class="icheck" data-checkbox="icheckbox_minimal-grey">
+			自動更新
+		</label>
+	</div>
+}
+@section PageScript {
+	@Scripts.Render("~/bundles/vote/js")
+}

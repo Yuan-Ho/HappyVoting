@@ -1,0 +1,60 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutMain.cshtml";
+	ViewBag.Title = "測試";
+}
+@section PageStyles
+{
+	<!-- BEGIN PAGE LEVEL STYLES -->
+	<!-- END PAGE LEVEL STYLES -->
+}
+<!-- BEGIN PAGE BAR -->
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<a href="index.html">Home</a>
+			<i class="fa fa-circle"></i>
+		</li>
+		<li>
+			<span>@ViewBag.Title</span>
+		</li>
+	</ul>
+	<div class="page-toolbar">
+	</div>
+</div>
+<!-- END PAGE BAR -->
+<!-- BEGIN PAGE TITLE-->
+<h3 class="page-title">@ViewBag.Title
+	<small></small>
+</h3>
+<!-- END PAGE TITLE-->
+<!-- END PAGE HEADER-->
+
+<div class="row margin-bottom-20">
+	<pre>
+		HTTP_X_COMING_FROM = @Request.ServerVariables["HTTP_X_COMING_FROM"]
+		HTTP_X_FORWARDED_FOR = @Request.ServerVariables["HTTP_X_FORWARDED_FOR"]
+		HTTP_X_FORWARDED = @Request.ServerVariables["HTTP_X_FORWARDED"]
+		HTTP_VIA = @Request.ServerVariables["HTTP_VIA"]
+		HTTP_COMING_FROM = @Request.ServerVariables["HTTP_COMING_FROM"]
+		HTTP_FORWARDED_FOR = @Request.ServerVariables["HTTP_FORWARDED_FOR"]
+		HTTP_FORWARDED = @Request.ServerVariables["HTTP_FORWARDED"]
+		HTTP_FROM = @Request.ServerVariables["HTTP_FROM"]
+		HTTP_PROXY_CONNECTION = @Request.ServerVariables["HTTP_PROXY_CONNECTION"]
+		CLIENT_IP = @Request.ServerVariables["CLIENT_IP"]
+		FORWARDED = @Request.ServerVariables["FORWARDED"]
+		REMOTE_ADDR = @Request.ServerVariables["REMOTE_ADDR"]
+		HTTP_CLIENT_IP = @Request.ServerVariables["HTTP_CLIENT_IP"]
+		X-Forwarded-For = @Request.ServerVariables["X-Forwarded-For"]
+		X_FORWARDED_FOR = @Request.ServerVariables["X_FORWARDED_FOR"]
+		REMOTE_HOST = @Request.ServerVariables["REMOTE_HOST"]
+		HTTP_X_CLUSTER_CLIENT_IP = @Request.ServerVariables["HTTP_X_CLUSTER_CLIENT_IP"]
+
+		UserHostAddress = @Request.UserHostAddress
+
+		Util.ClientIp = @Util.ClientIp()
+	</pre>
+</div>
+
+@section PageScript {
+	<script src="../Content/sidebar.js" type="text/javascript"></script>
+}

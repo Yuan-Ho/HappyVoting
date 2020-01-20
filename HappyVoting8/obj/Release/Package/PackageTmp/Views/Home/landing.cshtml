@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Happy Voting !</title>
+	<link rel="icon" type="image/png" href="Content/favicon.png">
+	@Styles.Render("~/assets/bootstrap/css/landing")
+	<link href="~/Content/styles.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body data-default-background-img="assets/images/other_images/bg5.jpg" data-overlay="true" data-overlay-opacity="0.35">
+	<div id="outer-container">
+		<section id="left-sidebar">
+			<div class="logo">
+				<a href="#intro" class="link-scroll">
+					<img src="Content/logo-2.png" alt="Happy Voting !"></a>
+			</div>
+			<div id="mobile-menu-icon" class="visible-xs" onclick="toggle_main_menu();"><span class="glyphicon glyphicon-th"></span></div>
+			<ul id="main-menu">
+				<li id="menu-item-text" class="menu-item scroll"><a href="#text">現在開始</a></li>
+				<li id="menu-item-carousel" class="menu-item scroll"><a href="#carousel">熱門標籤</a></li>
+				<li id="menu-item-grid" class="menu-item scroll"><a href="#grid">熱門投票</a></li>
+				<li id="menu-item-featured" class="menu-item scroll"><a href="#featured">關於</a></li>
+				<li id="menu-item-tabs" class="menu-item scroll"><a href="#tabs">常見問答</a></li>
+				<li id="menu-item-contact" class="menu-item scroll"><a href="#contact">聯絡我們</a></li>
+			</ul>
+		</section>
+		<section id="main-content" class="tag_scroll_container clearfix">
+			<article id="intro" class="section-wrapper clearfix" data-custom-background-img="assets/images/other_images/bg5.jpg">
+				<div class="content-wrapper clearfix wow fadeInDown" data-wow-delay="0.3s">
+					<div class="col-sm-10 col-md-9 pull-right">
+						<h1 class="section-title">最新投票</h1>
+						<div class="feature-paragraph">
+							<img data-img-src="assets/images/other_images/tabs-icon3.png" class="lazy pull-right" alt="Lorem Ipsum">
+							<ul class="sub-menu" data-bind="foreach: tagScrollAll">
+								<li class="nav-item  ">
+									<a class="nav-link " data-bind="attr: { href: link, title: who }">
+										<span class="title" data-bind="text: title"></span>
+									</a>
+								</li>
+							</ul>
+						</div>
+						<p><a class="btn btn-outline-inverse btn-sm">看更多</a></p>
+					</div>
+				</div>
+			</article>
+			<article id="text" class="section-wrapper clearfix" data-custom-background-img="assets/images/other_images/bg1.jpg">
+				<div class="content-wrapper clearfix">
+					<div class="col-sm-10 col-md-9 pull-right">
+						<section class="feature-text">
+							<h1>投票! 問卷調查! 民意調查!</h1>
+							<p>www.fotous.net是一個線上投票網站。個人化、自由度高，完全免費。現在就建立您的專屬問卷 !</p>
+							<p><a class="link-scroll btn btn-outline-inverse btn-lg" onclick="createVote(true)">GO</a></p>
+						</section>
+					</div>
+				</div>
+			</article>
+			<article id="contact" class="section-wrapper clearfix" data-custom-background-img="assets/images/other_images/bg4.jpg">
+				<div class="content-wrapper clearfix">
+
+					<h1 class="section-title">聯絡我們</h1>
+					<div class="contact-details col-sm-offset-7 col-sm-5 col-md-offset-9 col-md-3">
+						<p><a href="mailto:helaccsa@gmail.com">helaccsa@gmail.com</a></p>
+					</div>
+				</div>
+			</article>
+		</section>
+		<section id="footer">
+			<div id="go-to-top" onclick="scroll_to_top();"><span class="icon glyphicon glyphicon-chevron-up"></span></div>
+			<ul class="social-icons">
+				<li><a href="#" target="_blank" title="Facebook">
+					<img src="assets/images/theme_images/social_icons/facebook.png" alt="Facebook"></a></li>
+				<li><a href="#" target="_blank" title="Twitter">
+					<img src="assets/images/theme_images/social_icons/twitter.png" alt="Twitter"></a></li>
+				<li><a href="#" target="_blank" title="Google+">
+					<img src="assets/images/theme_images/social_icons/googleplus.png" alt="Google+"></a></li>
+			</ul>
+			<div class="footer-text-line">&copy; 2016 www.fotous.net</div>
+		</section>
+	</div>
+	<div class="modal fade" id="common-modal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<div class="modal-body clearfix">
+				</div>
+			</div>
+		</div>
+	</div>
+	<nav id="preload_tagscrolls" class="hidden">
+		<ul data-tag="All">
+			@{Html.RenderAction("PreloadTagScroll", new { tag = "All" });}
+		</ul>
+	</nav>
+	@Scripts.Render("~/bundles/landing/js")
+
+	<!--[if lt IE 9]>
+    <script>contact_form_IE9_placeholder_fix();</script>
+    <![endif]-->
+</body>
+</html>

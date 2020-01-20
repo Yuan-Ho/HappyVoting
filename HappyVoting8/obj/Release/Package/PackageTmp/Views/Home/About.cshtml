@@ -1,0 +1,111 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutMain.cshtml";
+	ViewBag.Title = "關於";
+}
+@section PageStyles
+{
+	<!-- BEGIN PAGE LEVEL STYLES -->
+	<link href="../assets/pages/css/about.min.css" rel="stylesheet" type="text/css" />
+	<!-- END PAGE LEVEL STYLES -->
+}
+<!-- BEGIN PAGE BAR -->
+<div class="page-bar">
+	<ul class="page-breadcrumb">
+		<li>
+			<a href="index.html">Home</a>
+			<i class="fa fa-circle"></i>
+		</li>
+		<li>
+			<span>@ViewBag.Title</span>
+		</li>
+	</ul>
+	<div class="page-toolbar">
+	</div>
+</div>
+<!-- END PAGE BAR -->
+<!-- BEGIN PAGE TITLE-->
+<h3 class="page-title">@ViewBag.Title
+	<small></small>
+</h3>
+<!-- END PAGE TITLE-->
+<!-- END PAGE HEADER-->
+<!-- BEGIN CONTENT HEADER -->
+<div class="row margin-bottom-40 about-header">
+	<div class="col-md-12">
+		<h1>關於我們</h1>
+		<h2>那種小事不重要啦</h2>
+		<button type="button" class="btn btn-danger">加入</button>
+	</div>
+</div>
+<!-- END CONTENT HEADER -->
+<!-- BEGIN CARDS -->
+<div class="row margin-bottom-20">
+	<div class="col-lg-3 col-md-6">
+		<div class="portlet light">
+			<div class="card-icon">
+				<i class="icon-user-follow font-red-sunglo theme-font"></i>
+			</div>
+			<div class="card-title">
+				<span>即時反應</span>
+			</div>
+			<div class="card-desc">
+				<span>使用者的投票數即時反應到圖表上，不需手動更新就可看到最新的結果。</span>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6">
+		<div class="portlet light">
+			<div class="card-icon">
+				<i class="icon-trophy font-green-haze theme-font"></i>
+			</div>
+			<div class="card-title">
+				<span>自訂投票內容</span>
+			</div>
+			<div class="card-desc">
+				<span>非投票發起人也可以新增題目或選項，增加參與感，有集思廣益的效果。</span>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6">
+		<div class="portlet light">
+			<div class="card-icon">
+				<i class="icon-basket font-purple-wisteria theme-font"></i>
+			</div>
+			<div class="card-title">
+				<span>公開/不公開投票</span>
+			</div>
+			<div class="card-desc">
+				<span>公開投票可以幫忙增加投票人數。不公開投票適用於自行私下找人填問卷的場合。</span>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6">
+		<div class="portlet light">
+			<div class="card-icon">
+				<i class="icon-layers font-blue theme-font"></i>
+			</div>
+			<div class="card-title">
+				<span>TODO</span>
+			</div>
+			<div class="card-desc">
+				<span>TBD</span>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END CARDS -->
+<!-- BEGIN MEMBERS SUCCESS STORIES -->
+<div class="row margin-bottom-40 stories-header" data-auto-height="true">
+
+</div>
+<div class="row margin-bottom-20 stories-cont">
+</div>
+<div class="row margin-bottom-40 stories-footer">
+	<div class="col-md-12">
+		<button type="button" class="btn btn-danger">看更多</button>
+	</div>
+</div>
+<!-- END MEMBERS SUCCESS STORIES -->
+@section PageScript {
+	<script src="../Content/sidebar.js" type="text/javascript"></script>
+}
